@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run build && node build/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "npx nodemon"
   },
   "repository": {
     "type": "git",
@@ -19,6 +21,10 @@
   "homepage": "https://github.com/arthurkyambadde/nodescrapper#readme",
   "devDependencies": {
     "@types/node": "^20.4.1",
+    "nodemon": "^3.0.1",
+    "rimraf": "^5.0.1",
+    "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
-  }
+  },
+  "build": "rimraf ./build && tsc"
 }
