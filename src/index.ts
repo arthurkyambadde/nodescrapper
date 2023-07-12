@@ -1,25 +1,33 @@
 import { getCompanyFacebookLink } from "./getCompanyFacebookLink/getCompanyFacebookLink";
 import { getGoogleSearchLinks } from "./getGoogleSearchLinks/getGoogleSearchLinks";
 import { getEmailAdress } from "./getCompanyEmail/getCompanyEmail";
+import { readCompanyNames } from "./readCompanyName/readCompanyNames";
+const path = require("path");
+const fs = require("fs");
 
-const company: string = "dstv";
-const url = `https://www.google.com/search?q=${company}`;
-
-const expression: RegExp =
-  /(?:https?:\/\/)?(?:www\.)?(mbasic.facebook|m\.facebook|facebook|fb)\.(com|me)\/(?:(?:\w\.)*#!\/)?(?:pages\/)?(?:[\w\-\.]*\/)*([\w\-\.]*)/;
+const filePath = path.join(__dirname, "assets", "companies.txt");
 
 (async () => {
   try {
-    const googleResults: any = await getGoogleSearchLinks(url);
+    const companies = readCompanyNames(filePath);
+    const companyEmails: string[] = [];
 
-    const facebookPage = await getCompanyFacebookLink(
-      googleResults,
-      expression
-    );
+    companies.map(async (company: any) => {
+      const url = `https://www.google.com/search?q=${company}`;
 
-    const email = await getEmailAdress(facebookPage);
+      const googleResults: any = await getGoogleSearchLinks(url);
 
-    console.log("email", email);
+      const facebookPage = await getCompanyFacebookLink(googleResults);
+
+      const email = await getEmailAdress(facebookPage);
+      companyEmails.push(email);
+
+      console.log("email", email);
+
+      const emailsText = companyEmails.join("\n");
+      fs.writeFileSync("emails.txt", emailsText);
+      console.log("Emails written to emails.txt file.");
+    });
   } catch (error) {
     console.log("error:", error);
   }
