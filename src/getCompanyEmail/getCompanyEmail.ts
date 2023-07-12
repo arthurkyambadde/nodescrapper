@@ -43,7 +43,7 @@ export async function getEmailAdress(facebookPageURL: any) {
     }
 
     if (email) {
-      console.log(`Email address: ${email}`);
+      return email;
     } else {
       console.log("No valid email address found.");
     }
