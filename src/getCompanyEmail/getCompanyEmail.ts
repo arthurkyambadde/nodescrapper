@@ -1,21 +1,9 @@
 const { Builder, By, until } = require("selenium-webdriver");
 require("chromedriver");
 
-export async function getEmailAdress(facebookPageURL: any) {
-  let driver: any;
-
+export async function getEmailAdress(driver: any, facebookPageURL: any) {
   try {
-    driver = await new Builder().forBrowser("chrome").build();
-
     await driver.get(facebookPageURL);
-
-    await driver
-      .findElement(By.name("email"))
-      .sendKeys("arthurkyambadde9@gmail.com"); // Replace with your email
-    await driver.findElement(By.name("pass")).sendKeys("mupsa2015"); // Replace with your password
-
-    // Submit the login form
-    await driver.findElement(By.css('form[method="post"]')).submit();
 
     // Wait for the elements containing the phone number and email address
     await driver.wait(
@@ -49,9 +37,5 @@ export async function getEmailAdress(facebookPageURL: any) {
     }
   } catch (error) {
     console.error("Error scraping company email:", error);
-  } finally {
-    if (driver) {
-      await driver.quit();
-    }
   }
 }
