@@ -2,8 +2,12 @@ import { getCompanyFacebookLink } from "./getCompanyFacebookLink/getCompanyFaceb
 import { getGoogleSearchLinks } from "./getGoogleSearchLinks/getGoogleSearchLinks";
 import { getEmailAdress } from "./getCompanyEmail/getCompanyEmail";
 import { readCompanyNames } from "./readCompanyName/readCompanyNames";
+import { loginToFacebook } from "./loginToFacebook/loginToFacebook";
+import { logOutOfFacebook } from "./logOutOfFacebook/logOutFacebook";
 const path = require("path");
 const fs = require("fs");
+const webdriver = require("selenium-webdriver"); // Correct import for webdriver
+const { Builder, By, until, Options } = require("selenium-webdriver");
 
 const filePath = path.join(__dirname, "assets", "companies.txt");
 
@@ -12,22 +16,51 @@ const filePath = path.join(__dirname, "assets", "companies.txt");
     const companies = readCompanyNames(filePath);
     const companyEmails: string[] = [];
 
-    companies.map(async (company: any) => {
+    const urlPromises = companies.map(async (company: any) => {
       const url = `https://www.google.com/search?q=${company}`;
-
       const googleResults: any = await getGoogleSearchLinks(url);
+      return getCompanyFacebookLink(googleResults);
+    });
 
-      const facebookPage = await getCompanyFacebookLink(googleResults);
+    // Get all the Facebook page URLs
+    const facebookPageURLs = await Promise.all(urlPromises);
 
-      const email = await getEmailAdress(facebookPage);
-      companyEmails.push(email);
+    // Log in to Facebook
+    let driver;
+    try {
+      // Configure Chrome options to disable notifications
+      const capabilities = webdriver.Capabilities.chrome();
+      capabilities.set("chromeOptions", { args: ["--disable-notifications"] });
 
-      console.log("email", email);
+      driver = await new Builder().forBrowser("chrome").build();
+
+      await driver.get("https://www.facebook.com/");
+      await driver
+        .findElement(By.name("email"))
+        .sendKeys("arthurkyambadde9@gmail.com");
+      await driver.findElement(By.name("pass")).sendKeys("mupsa2015");
+      await driver.findElement(By.css('form[method="post"]')).submit();
+      870;
+
+      for (const facebookPage of facebookPageURLs) {
+        const email = await getEmailAdress(driver, facebookPage);
+        if (email) {
+          companyEmails.push(email);
+        } else {
+          companyEmails.push(`No Valid email Found`);
+        }
+      }
 
       const emailsText = companyEmails.join("\n");
       fs.writeFileSync("emails.txt", emailsText);
       console.log("Emails written to emails.txt file.");
-    });
+    } catch (error) {
+      console.log("error:", error);
+    } finally {
+      if (driver) {
+        logOutOfFacebook(driver);
+      }
+    }
   } catch (error) {
     console.log("error:", error);
   }
