@@ -42,12 +42,17 @@ const filePath = path.join(__dirname, "assets", "companies.txt");
       await driver.findElement(By.css('form[method="post"]')).submit();
       870;
 
+      let index = 0;
       for (const facebookPage of facebookPageURLs) {
         const email = await getEmailAdress(driver, facebookPage);
         if (email) {
-          companyEmails.push(email);
+          const printStatement = `${email} is email address for ${companies[index]}`;
+          index++;
+          companyEmails.push(printStatement);
         } else {
-          companyEmails.push(`No Valid email Found`);
+          const printStatement = `Failed to get email for ${companies[index]} `;
+          index++;
+          companyEmails.push(printStatement);
         }
       }
 
