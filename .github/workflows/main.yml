@@ -3,7 +3,7 @@ name: Facebook Scrapping Workflow
 on:
   push:
     branches:
-      - main
+      - dev--arthur
 
 jobs:
   build:
