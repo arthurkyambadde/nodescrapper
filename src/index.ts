@@ -36,9 +36,9 @@ const filePath = path.join(__dirname, "assets", "companies.txt");
 
       await driver.get("https://www.facebook.com/");
       await driver
-        .findElement(By.name(process.env.PASSWORD))
+        .findElement(By.name("email"))
         .sendKeys(process.env.EMAIL_ADDRESS);
-      await driver.findElement(By.name("pass")).sendKeys("mupsa2015");
+      await driver.findElement(By.name("pass")).sendKeys(process.env.PASSWORD);
       await driver.findElement(By.css('form[method="post"]')).submit();
       870;
 
