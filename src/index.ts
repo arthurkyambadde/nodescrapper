@@ -58,15 +58,15 @@ const filePath = path.join(__dirname, "assets", "companies.txt");
 
       const emailsText = companyEmails.join("\n");
       fs.writeFileSync("emails.txt", emailsText);
-      console.log("Emails written to emails.txt file.");
     } catch (error) {
-      console.log("error:", error);
     } finally {
       if (driver) {
         logOutOfFacebook(driver);
       }
     }
-  } catch (error) {
-    console.log("error:", error);
-  }
+  } catch (error) {}
 })();
+
+module.exports = {
+  filePath: filePath,
+};

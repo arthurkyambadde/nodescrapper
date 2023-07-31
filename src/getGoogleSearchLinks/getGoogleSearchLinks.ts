@@ -13,7 +13,6 @@ export async function getGoogleSearchLinks(url: string) {
 
     $(links).each(function (index: number, element: any) {
       links_data.push($(element).attr("href"));
-      // console.log(links_data);
     });
 
     return links_data;

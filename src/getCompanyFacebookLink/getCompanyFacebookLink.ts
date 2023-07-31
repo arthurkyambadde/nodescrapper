@@ -7,8 +7,6 @@ export async function getCompanyFacebookLink(links: string[]) {
     if (match) {
       const facebookLink: string = match[0]; // Use match[0] to get the full matched URL
 
-      console.log("Found Facebook Link:", facebookLink); // Log the Facebook link for debugging purposes
-
       return facebookLink;
     }
   }

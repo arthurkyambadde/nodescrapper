@@ -33,9 +33,6 @@ export async function getEmailAdress(driver: any, facebookPageURL: any) {
     if (email) {
       return email;
     } else {
-      console.log("No valid email address found.");
     }
-  } catch (error) {
-    console.error("Error scraping company email:", error);
-  }
+  } catch (error) {}
 }
